@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get("/eligible", [CampaignController::class, 'eligibleCheck']);
+Route::post("/photo", [CampaignController::class, 'photoCheck']);

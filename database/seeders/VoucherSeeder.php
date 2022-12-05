@@ -20,7 +20,6 @@ class VoucherSeeder extends Seeder
             DB::table("vouchers")->insert([
                 "code" => $faker->regexify("[A-Z]{5}[0-9]{3}"),
                 "created_at" => now(),
-                "updated_at" => now(),
             ]);
         }
     }
