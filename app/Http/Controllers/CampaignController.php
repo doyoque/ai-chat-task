@@ -83,11 +83,20 @@ class CampaignController extends Controller
     public function photoCheck(ImageStoreRequest $request)
     {
         $request->validated();
+        $userId = $request->get("customer_id");
+        $allocatedVoucher = $this->voucherCheck($userId, true);
+        if ($allocatedVoucher) {
+            return response([
+                "message" => "You already recieve voucher code",
+                "code" => 422,
+            ], 422);
+        }
+
         // $request->file("image")->store("image", "public");
 
         $imgRecognition = true;
         $validVoucher = true;
-        $voucher = $this->voucherCheck($request->get("customer_id"));
+        $voucher = $this->voucherCheck($userId);
         if ($voucher) {
             $currentTime = new DateTime();
             $futureTime = new DateTime(date("Y-m-d H:i:s", strtotime($voucher->updated_at)));
