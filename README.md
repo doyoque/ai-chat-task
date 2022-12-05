@@ -25,6 +25,7 @@ DB_PASSWORD=secret123
 ```
 
 Generate artisan key with `php artisan key:generate`.<br>
+Generate data with `php artisan migrate --seed`.<br>
 Run locally with `php artisan serve`. It will open `http://localhost:8000`.
 
 ## Run Local With Docker (Recommend)
