@@ -2,6 +2,17 @@
 
 Simple give away voucher code campaign for loyal customer.
 
+## Motivation
+
+Eligible customer can participate the campaign by accessing _eligible_ API. If API response with 200 the voucher 
+will be locked down for 10 minutes to this customer so the customer can continue to the next phase for uploading 
+a selfie image. If image recognition result return is true and submission within 10 minutes since hitting the 
+_eligible_ API, allocate the locked voucher to the customer and return the voucher code.
+<br>
+If the result of image recognition is false or submission exceeds 10 minutes, remove the lock down and this voucher 
+will become available to the next customer to grab.
+
+
 ## Pre requisite
 
 - Laravel v9.19
