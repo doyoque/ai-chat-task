@@ -51,7 +51,10 @@ mysql:
     tty: true
 ```
 
-Simply execute `docker-compose up` or `docker-compose up -d` for detach services from foreground.
+Simply execute `docker-compose up` or `docker-compose up -d` for detach services from foreground.<br>
+List accessible container:
+- http://localhost:8081 (adminer)
+- http://localhost:8000 (app)
 
 ## List Endpoint
 
