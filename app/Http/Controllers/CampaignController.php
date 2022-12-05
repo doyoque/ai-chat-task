@@ -28,6 +28,14 @@ class CampaignController extends Controller
 
         $userId = $request->get("user_id");
 
+        $allocatedVoucher = $this->voucherCheck($userId, true);
+        if ($allocatedVoucher) {
+            return response([
+                "message" => "You already recieve voucher code",
+                "code" => 422,
+            ], 422);
+        }
+
         $validateVoucher = $this->voucherCheck($userId);
         if ($validateVoucher) {
             $currentTime = new DateTime();
@@ -78,9 +86,28 @@ class CampaignController extends Controller
         // $request->file("image")->store("image", "public");
 
         $imgRecognition = true;
-        if ($imgRecognition) {
+        $validVoucher = true;
+        $voucher = $this->voucherCheck($request->get("customer_id"));
+        if ($voucher) {
+            $currentTime = new DateTime();
+            $futureTime = new DateTime(date("Y-m-d H:i:s", strtotime($voucher->updated_at)));
+            if ($currentTime > $futureTime) {
+                $voucher->updated_at = null;
+                $voucher->customer_id = null;
+                $voucher->save();
+                $validVoucher = false;
+            }
+        } else {
+            $validVoucher = false;
+        }
+
+        if ($imgRecognition && $validVoucher) {
+            $voucher->image_recognition = $imgRecognition;
+            $voucher->save();
+
             return response([
                 "message" => "Here's your voucher",
+                "voucher" => $voucher->code,
                 "code" => 200,
             ], 200);
         }
@@ -96,16 +123,16 @@ class CampaignController extends Controller
      * Check voucher is allocated.
      *
      * @param int $userId
+     * @param bool $imgRecognition
      * @return object
      */
-    private function voucherCheck($userId)
+    private function voucherCheck($userId, $imgRecognition = false)
     {
-        $voucher = Voucher::where([
+        return Voucher::where([
             [ "customer_id", "=", $userId ],
             [ "updated_at", "!=", null ],
+            [ "image_recognition", "=", $imgRecognition ],
         ])->first();
-
-        return $voucher != null ? $voucher : false;
     }
 
     /**
